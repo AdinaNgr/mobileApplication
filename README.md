@@ -9,5 +9,5 @@ In order to do so the application will support the following:
 4. Display a chart - to see the best of them
 5. Offline support - persist data on the local storage
 6. Online support - synchronize date to/from a remote location
-7. Intent - show map coordinates on google maps of the cinemas from the current city
+7. Intent - show the movie page from IMDB 
 8. Animations
