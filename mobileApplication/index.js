@@ -15,18 +15,23 @@ import {
 
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
+import Login from './login.js';
 
 var MOCKED_MOVIES_DATA = [
     {title: 'Titanic', year: '2015', posters: {thumbnail: 'http://i.imgur.com/UePbdph.jpg'}},
 ];
-const routes = [
+const routes =[
     {
-        title: 'Movie List: ',
+
         index: 0
     },
     {
-        title: 'Movie Details: ',
+        title: 'Movie List:',
         index: 1
+    },
+    {
+        title: 'Movie Details: ',
+        index: 2
     }
 ];
     class App extends Component {
@@ -43,8 +48,9 @@ const routes = [
             renderScene={
             (route, navigator) => {
                 switch (route.index) {
-                    case 0: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
-                    case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
+                    case 0: return(<Login/>);
+                    case 1: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
+                    case 2: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                 }
             }
         }
@@ -76,6 +82,12 @@ const routes = [
         </View>
         );
         }
+        // render(){
+        //     return(
+        //         <Login/>
+        // )
+        // }
+
     }
 
     const styles = StyleSheet.create({
@@ -89,7 +101,7 @@ const routes = [
             color: 'white',
             padding: 10,
             fontSize: 15,
-            backgroundColor: 'darkred'
+            backgroundColor: 'black'
         },
         titleText:{
             fontSize: 20,
