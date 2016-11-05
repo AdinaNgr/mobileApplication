@@ -8,21 +8,37 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    TextInput
 } from 'react-native';
 
 class DetailScreen extends React.Component{
 
     constructor(props){
         super(props);
-        this.state={}
+        this.state={
+            title: this.props.title,
+            year: this.props.year
+        }
     }
 
     render(){
         return(
             <View style={styles.container}>
-                <Text> Title: {this.props.title} </Text>
-                <Text> Year: {this.props.year} </Text>
+                <Text style={styles.description}> Title: </Text>
+                <TextInput
+                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                    onChangeText={(title) => this.setState({title})}
+                    value={this.state.title}
+                />
+                <Text style={styles.description}> Release Year: </Text>
+                <TextInput
+                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                    onChangeText={(year) => this.setState({year})}
+                    value={this.state.year}
+                />
+
+
             </View>
         )
     }
@@ -33,6 +49,9 @@ var styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         paddingTop: 70
+    },
+    description:{
+        color: 'darkgrey'
     }
 });
 

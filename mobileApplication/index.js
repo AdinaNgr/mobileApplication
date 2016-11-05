@@ -21,11 +21,11 @@ var MOCKED_MOVIES_DATA = [
 ];
 const routes = [
     {
-        title: 'Movie List',
+        title: 'Movie List: ',
         index: 0
     },
     {
-        title: 'Movie Details',
+        title: 'Movie Details: ',
         index: 1
     }
 ];
@@ -34,7 +34,7 @@ const routes = [
             return (
                 <View style={styles.container}>
         <StatusBar
-            backgroundColor="darkred"
+            backgroundColor="black"
             barStyle="light-content"
                 />
                 <Navigator
@@ -88,7 +88,8 @@ const routes = [
         navigationBarText:{
             color: 'white',
             padding: 10,
-            fontSize: 15
+            fontSize: 15,
+            backgroundColor: 'darkred'
         },
         titleText:{
             fontSize: 20,
