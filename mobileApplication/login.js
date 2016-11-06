@@ -13,9 +13,19 @@ import {
     Text,
     View,
     Image,
-    TextInput
+    TextInput,
+    ActivityIndicator
 } from 'react-native';
 class Login extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            showProgress: false
+        }
+    }
+    onLoginPressed(){
+        this.setState({showProgress: true});
+    }
     render(){
         return(
                 <View style={styles.container}>
@@ -24,19 +34,31 @@ class Login extends React.Component{
                     <Text style={styles.header}>
                         Login
                      </Text>
-                      <TextInput style={styles.input}
+                      <TextInput
+                        onChangeText={(text)=>this.setState({username: text})}
+                        style={styles.input}
                         placeholder="Username"/>
-                    <TextInput style={styles.input}
+                    <TextInput
+                        onChangeText={(text)=>this.setState({password: text})}
+                        style={styles.input}
                         placeholder="Password"/>
-                    <TouchableHighlight style={styles.button}>
+                    <TouchableHighlight
+                        onPress={() => this.onLoginPressed()}
+                        style={styles.button}>
                         <Text style={styles.buttonText}>
                             Log in
                         </Text>
                     </TouchableHighlight>
+
+                     <ActivityIndicator
+                         animating={this.state.showProgress}
+                         size="large"
+                         style={styles.loader}/>
                 </View>
-            )
+            );
 
     }
+
 }
 var styles = StyleSheet.create({
     container:{
@@ -77,6 +99,9 @@ var styles = StyleSheet.create({
         fontSize: 20,
         color: '#FFF',
         alignSelf: 'center'
+    },
+    loader: {
+        marginTop: 20
     }
 });
 

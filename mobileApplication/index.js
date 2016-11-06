@@ -16,7 +16,7 @@ import {
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
 import Login from './login.js';
-
+import FacebookLogin from './facebook-login.js'
 var MOCKED_MOVIES_DATA = [
     {title: 'Titanic', year: '2015', posters: {thumbnail: 'http://i.imgur.com/UePbdph.jpg'}},
 ];
@@ -48,7 +48,7 @@ const routes =[
             renderScene={
             (route, navigator) => {
                 switch (route.index) {
-                    case 0: return(<Login/>);
+                    case 0: return(<FacebookLogin/>);
                     case 1: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 2: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                 }
