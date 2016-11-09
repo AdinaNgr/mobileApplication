@@ -1,7 +1,7 @@
 /**
  * Created by Adina on 11/4/2016.
  */
-
+/*
 'use strict';
 import React from 'react';
 import {
@@ -105,4 +105,4 @@ var styles = StyleSheet.create({
     }
 });
 
-export default Login;
+export default Login;*/

@@ -15,22 +15,19 @@ import {
 
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
-import Login from './login.js';
-import FacebookLogin from './facebook-login.js'
-var MOCKED_MOVIES_DATA = [
-    {title: 'Titanic', year: '2015', posters: {thumbnail: 'http://i.imgur.com/UePbdph.jpg'}},
-];
+import GmailForm from './GmailForm.js';
+
 const routes =[
     {
-
+        title: 'Movie List:',
         index: 0
     },
     {
-        title: 'Movie List:',
+        title: 'Movie Details: ',
         index: 1
     },
     {
-        title: 'Movie Details: ',
+        title: 'Send Email',
         index: 2
     }
 ];
@@ -47,10 +44,11 @@ const routes =[
             initialRouteStack={routes}
             renderScene={
             (route, navigator) => {
-                switch (route.index) {
-                    case 0: return(<FacebookLogin/>);
-                    case 1: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
-                    case 2: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
+                switch (route.index)
+                {
+                    case 0: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
+                    case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
+                    case 2: return (<GmailForm navigator={navigator} route={routes[route.index]} {...route.passProps}></GmailForm>);
                 }
             }
         }
@@ -82,11 +80,6 @@ const routes =[
         </View>
         );
         }
-        // render(){
-        //     return(
-        //         <Login/>
-        // )
-        // }
 
     }
 
@@ -110,4 +103,4 @@ const routes =[
 
     });
 
-    AppRegistry.registerComponent('mobileApplication', () => App);
+AppRegistry.registerComponent('mobileApplication', () => App);

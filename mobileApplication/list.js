@@ -13,9 +13,86 @@ import {
 } from 'react-native';
 
 import * as Progress from 'react-native-progress';
+import Button from 'react-native-button'
 
-import InfiniteScrollView from 'react-native-infinite-scroll-view';
+class ListScreen extends React.Component{
+    constructor(props){
+        super(props);
 
+        const ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+
+        this.state = {
+            dataSource: ds.cloneWithRows(['row1', 'row2']),
+            myMovies: [],
+            loaded: false
+        };
+    }
+
+    componentDidMount(){
+        this.fetchData();
+    }
+    handlePressList(movie){
+        this.props.navigator.push({index:1,
+            passProps: {
+                year: movie.movieYear
+            }
+        })}
+    fetchData(){
+        fetch('https://facebook.github.io/react-native/movies.json')
+            .then( (response) => response.json())
+            .then( (responseData) => {
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.movies),
+                    loaded: true,
+                });
+            })
+            .done();
+    }
+    render(){
+        if(!this.state.loaded)
+        {
+            return(<View style={styles.progress}>
+                    <Text> Please wait...</Text>
+                    <Progress.Bar progress={0.3} width={200} indeterminate={true}/>
+                    </View>);
+        }
+
+        return(
+            <View style={{flex: 1}}>
+            <ListView style={styles.container1}
+                        enableEmptySections={true}
+                        dataSource={this.state.dataSource}
+                        renderRow=
+                            {(movie)=>
+                            <TouchableOpacity onPress={()=> this.props.navigator.push({index:1,
+                                    passProps:
+                                    {
+                                        title: movie.title,
+                                        year: movie.releaseYear
+                                    }})
+                            }>
+                                <View>
+                                    <Text style={styles.symbol}> {movie.title}</Text>
+                                </View>
+                        </TouchableOpacity>
+                         }
+                renderSeparator={(sectionID, rowID, adjacentRowHighlighted)=>
+                     <View key={rowID} style={{height: 1, backgroundColor:'lightgray'}}/>}
+
+            />
+
+                <Button
+                    style={{fontSize: 20, color: 'green'}}
+                    styleDisabled={{color: 'red'}}
+                    onPress={()=> this.props.navigator.push({index:2})}>
+                    Send email!
+                </Button>
+            </View>
+    );
+    }
+}
 const styles = StyleSheet.create({
     separator: {
         flex: 1,
@@ -56,99 +133,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
 });
-var jsonData = require('./movies.json');
-var API_KEY = '7waqfqbprs7pajbz28mqf6vz';
-var API_URL = 'http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json';
-var PAGE_SIZE = 25;
-var PARAMS = '?apikey=' + API_KEY + '&page_limit=' + PAGE_SIZE;
-var REQUEST_URL = API_URL + PARAMS;
-
-class ListScreen extends React.Component{
-    constructor(props){
-        super(props);
-
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 != r2
-        });
-
-        this.state = {
-            dataSource: ds.cloneWithRows(['row1', 'row2']),
-            myMovies: [],
-            loaded: false
-        };
-    }
-
-    componentDidMount(){
-        this.fetchData();
-    }
-    handlePressList(movie){
-        this.props.navigator.push({index:1,
-            passProps: {
-                year: movie.movieYear
-            }
-        })}
-    fetchData(){
-        console.log('request url: ', REQUEST_URL);
-        fetch('https://facebook.github.io/react-native/movies.json')
-            .then( (response) => response.json())
-            .then( (responseData) => {
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.movies),
-                    loaded: true,
-                });
-            })
-            .done();
-    }
-    render(){
-        if(!this.state.loaded){
-            return(<View style={styles.progress}>
-                    <Text> Please wait...</Text>
-                    <Progress.Bar progress={0.3} width={200} indeterminate={true}/>
-                    </View>
-        );
-        }
-
-        return(
-            <ListView style={styles.container1}
-                enableEmptySections={true}
-                dataSource={this.state.dataSource}
-                renderRow={(movie)=>
-                <TouchableOpacity onPress={()=> this.props.navigator.push({index:1,
-                    passProps:{
-                        title: movie.title,
-                        year: movie.releaseYear,
-
-                    }
-                })}>
-
-                 <View>
-                     <Text style={styles.symbol}> {movie.title}</Text>
-                </View>
-            </TouchableOpacity>
-                }
-        renderSeparator={(sectionID, rowID, adjacentRowHighlighted)=>
-    <View key={rowID} style={{height: 1, backgroundColor:'lightgray'}}/>
-    }
-            />
-        );
-    }
-    renderMovie(movie) {
-        movieTitle = movie.title;
-        movieYear = movie.releaseYear;
-
-        return (
-            <TouchableOpacity onPress={()=> this.props.navigator.push({index:1,
-            passProps:{
-                year: movie.releaseYear,
-
-            }})}>
-
-                <View>
-                <Text style={styles.symbol}> {movie.title}</Text>
-                </View>
-            </TouchableOpacity>
-    );
-    }
-}
 
 export default ListScreen;

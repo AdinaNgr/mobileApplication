@@ -21,7 +21,6 @@ class DetailScreen extends React.Component{
             year: this.props.year
         }
     }
-
     render(){
         return(
             <View style={styles.container}>
@@ -37,8 +36,6 @@ class DetailScreen extends React.Component{
                     onChangeText={(year) => this.setState({year})}
                     value={this.state.year}
                 />
-
-
             </View>
         )
     }

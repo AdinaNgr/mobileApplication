@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "15.3.2",
     "react-native": "0.36.1",
+    "react-native-button": "^1.7.1",
     "react-native-google-signin": "^0.8.1"
   },
   "jest": {
