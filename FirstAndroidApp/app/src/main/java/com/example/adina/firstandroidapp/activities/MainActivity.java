@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity{
     private LinearLayoutManager layoutManager;
     private ArrayList<Movie> movieList = new ArrayList<>();
     private MyAdapter adapter;
-    private Realm realm;
+    public static Realm realm;
     private EditText movieTitleTxt, movieYearTxt, movieDirectorTxt, movieRatingTxt;
 
     @Override
@@ -66,11 +66,21 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         //RETRIEVE
+
+        //Refresh
         RealmHelper helper = new RealmHelper(realm);
         movieList = helper.retrieve();
+        adapter = new MyAdapter(MainActivity.this, movieList);
+        recyclerView.setAdapter(adapter);
 
     }
 
+    private void displayEditDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Edit movie");
+        dialog.setContentView(R.layout.input_dialog);
+
+    }
     private void displayInputDialog(){
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("Add movie");
@@ -115,7 +125,11 @@ public class MainActivity extends AppCompatActivity{
     public void AddMovie(View view){
         Log.v("MainActivity", "Add Movie Button Pressed");
         displayInputDialog();
+    }
 
+    public void EditMovie(View view){
+        Log.v("MainActivity", "Edit Movie Button Pressed");
+        displayEditDialog();
     }
 }
 

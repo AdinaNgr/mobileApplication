@@ -1,10 +1,14 @@
 package com.example.adina.firstandroidapp.UI;
 
+import android.app.Dialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.example.adina.firstandroidapp.R;
@@ -41,12 +45,21 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        int position = getAdapterPosition();
-        /*movies.remove(position);
-        notifyItemRemoved(position);]
-        delete(position);*/
-        String stringPosition = "" + position;
-        Log.v("position", stringPosition);
+        Log.v("movieHolder", "Clicked!");
+        final Dialog dialog = new Dialog(view.getContext());
+        dialog.setTitle("Edit movie");
+        dialog.setContentView(R.layout.input_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
+        EditText movieTitleTxt = (EditText) dialog.findViewById(R.id.movieTitle);
+        EditText movieYearTxt = (EditText) dialog.findViewById(R.id.movieYear);
+        EditText movieDirectorTxt = (EditText) dialog.findViewById(R.id.movieDirector);
+        final NumberPicker movieRating = (NumberPicker) dialog.findViewById(R.id.movieRating);
+
+        movieTitleTxt.setText(movie.getTitle());
+        movieDirectorTxt.setText(movie.getDirector());
+        movieYearTxt.setText(movie.getYear());
+        movieRating.setValue( Integer.parseInt(movie.getRating()));
     }
 
 }
