@@ -1,8 +1,10 @@
-package com.example.adina.firstandroidapp;
+package com.example.adina.firstandroidapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
+
+import com.example.adina.firstandroidapp.R;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -25,7 +27,6 @@ public class DetailsActivity extends AppCompatActivity {
             String mRating = extras.getString("movieRating");
             EditText rating = (EditText) findViewById(R.id.et_rating);
             rating.setText(mRating);
-            //The key argument here must match that used in the other activity
         }
 
     }

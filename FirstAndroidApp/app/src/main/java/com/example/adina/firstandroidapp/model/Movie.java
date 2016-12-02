@@ -1,32 +1,27 @@
-package com.example.adina.firstandroidapp;
-
+package com.example.adina.firstandroidapp.model;
 import java.io.Serializable;
+import io.realm.RealmObject;
 
 /**
  * Created by Adina on 11/5/2016.
  */
 
-public class Movie implements Serializable {
-    private String url;
+//public class Movie implements Serializable {
+public class Movie extends RealmObject implements Serializable{
     private String title;
     private String year;
     private String director;
     private String rating;
 
-    public Movie(String url, String title, String year, String director, String rating) {
-        this.url = url;
+    public Movie(String title, String year, String director, String rating) {
         this.title = title;
         this.year = year;
         this.director = director;
         this.rating = rating;
     }
 
-    public String getUrl() {
-        return url;
-    }
+    public Movie(){
 
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getTitle() {
@@ -61,3 +56,4 @@ public class Movie implements Serializable {
         this.rating = rating;
     }
 }
+
