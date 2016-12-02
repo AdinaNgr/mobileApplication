@@ -46,19 +46,23 @@ public class RealmHelper {
 
             @Override
             public void execute(Realm realm) {
-                // remove a single object
                 RealmResults<Movie> movies = realm.where(Movie.class).findAll();
                 Movie movie = movies.get(position);
                 Log.v("Helper", "movie: " +movie.toString() );
-
                 movie.deleteFromRealm();
-
-
-
-                // Delete all matches
-                //results.deleteAllFromRealm();
             }
 
         });
+    }
+
+    public void update(String title, String year, String director,String rating){
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setYear(year);
+        movie.setDirector(director);
+        movie.setRating(rating);
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(movie);
+        realm.commitTransaction();
     }
 }

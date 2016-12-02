@@ -1,11 +1,15 @@
 package com.example.adina.firstandroidapp.UI;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.example.adina.firstandroidapp.R;
@@ -59,6 +63,67 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
                 // Show the removed item label
                 Toast.makeText(context, "Removed : " + movieTitle, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.editButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Log.v("movieHolder", "Clicked Edit Button!");
+                final Dialog dialog = new Dialog(view.getContext());
+                dialog.setTitle("Edit movie");
+                dialog.setContentView(R.layout.input_dialog);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
+                final EditText movieTitleTxt = (EditText) dialog.findViewById(R.id.movieTitle);
+                final EditText movieYearTxt = (EditText) dialog.findViewById(R.id.movieYear);
+                final EditText movieDirectorTxt = (EditText) dialog.findViewById(R.id.movieDirector);
+                final NumberPicker movieRating = (NumberPicker) dialog.findViewById(R.id.movieRating);
+
+
+                final Movie movie = movies.get(position);
+                Log.v("title:", movie.getTitle());
+                movieTitleTxt.setText(movie.getTitle());
+                movieDirectorTxt.setText(movie.getDirector());
+                movieYearTxt.setText(movie.getYear());
+                movieRating.setMaxValue(10);
+                movieRating.setMinValue(0);
+                movieRating.setFormatter(new NumberPicker.Formatter() {
+                    @Override
+                    public String format(int i) {
+                        return movie.getRating();
+                    }
+                });
+//                movieRating.setValue(Integer.parseInt(movie.getRating()));
+
+                dialog.show();
+
+                Button saveButton = (Button) dialog.findViewById(R.id.saveButton);
+
+                saveButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        //Get DATA
+                        String title = movieTitleTxt.getText().toString();
+                        String director = movieDirectorTxt.getText().toString();
+                        String year = movieYearTxt.getText().toString();
+                        String rating =  "" + movieRating.getValue();
+
+                        Movie movie = new Movie(title, year, director, rating);
+                        Realm realm = MainActivity.realm;
+                        RealmHelper helper = new RealmHelper(realm);
+
+                        helper.update(title, year, director, rating);
+                        movieTitleTxt.setText("");
+
+                        dialog.dismiss();
+                        //Refresh
+                        movies = helper.retrieve();
+                        MyAdapter adapter = new MyAdapter(v.getContext(), movies);
+                        MainActivity.recyclerView.setAdapter(adapter);
+                    }
+                });
+
             }
         });
     }

@@ -1,6 +1,9 @@
 package com.example.adina.firstandroidapp.model;
+import android.support.annotation.IdRes;
+
 import java.io.Serializable;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Adina on 11/5/2016.
@@ -8,6 +11,8 @@ import io.realm.RealmObject;
 
 //public class Movie implements Serializable {
 public class Movie extends RealmObject implements Serializable{
+    @PrimaryKey
+    private long id;
     private String title;
     private String year;
     private String director;
@@ -19,6 +24,14 @@ public class Movie extends RealmObject implements Serializable{
         this.director = director;
         this.rating = rating;
     }
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public Movie(){
 

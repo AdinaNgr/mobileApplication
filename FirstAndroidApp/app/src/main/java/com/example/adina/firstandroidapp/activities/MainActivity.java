@@ -28,7 +28,7 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class MainActivity extends AppCompatActivity{
 
-    private RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private ArrayList<Movie> movieList = new ArrayList<>();
     private MyAdapter adapter;
