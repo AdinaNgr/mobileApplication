@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.adina.firstandroidapp.activities.MainActivity">
+    tools:context="com.example.adina.firstandroidapp.activities.MainActivity"
+    android:minWidth="300dp">
 
 
 
@@ -22,7 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:background="#D3D3D3"/>
 
     <Button
         android:id="@+id/addMovie"

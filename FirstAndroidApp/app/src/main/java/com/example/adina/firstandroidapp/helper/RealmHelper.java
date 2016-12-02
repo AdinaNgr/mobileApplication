@@ -13,6 +13,7 @@ import io.realm.RealmResults;
 
 public class RealmHelper {
     Realm realm;
+    ArrayList<Movie> movieTitles;
     public RealmHelper(Realm realm){
         this.realm = realm;
     }
@@ -27,12 +28,27 @@ public class RealmHelper {
     }
 
     public ArrayList<Movie> retrieve(){
-        ArrayList<Movie> movieTitles = new ArrayList<>();
+        movieTitles = new ArrayList<>();
         RealmResults<Movie> movies = realm.where(Movie.class).findAll();
 
         for(Movie m: movies){
             movieTitles.add(m);
         }
         return movieTitles;
+    }
+
+    public void delete(int position){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                // remove a single object
+                Movie movie = movieTitles.get(5);
+                movie.deleteFromRealm();
+
+                // Delete all matches
+                //results.deleteAllFromRealm();
+            }
+        });
     }
 }

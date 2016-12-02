@@ -9,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import com.example.adina.firstandroidapp.R;
 import com.example.adina.firstandroidapp.UI.MyAdapter;
@@ -24,7 +26,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -32,13 +34,14 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private Realm realm;
     private EditText movieTitleTxt, movieYearTxt, movieDirectorTxt, movieRatingTxt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v("MainActivity", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        //RECYCLERVIEW SETUP
+        //RECYCLER VIEW SETUP
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -62,22 +65,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, EmailActivity.class));
             }
         });
-
         //RETRIEVE
         RealmHelper helper = new RealmHelper(realm);
         movieList = helper.retrieve();
+
     }
 
     private void displayInputDialog(){
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("Add movie");
         dialog.setContentView(R.layout.input_dialog);
-        dialog.getWindow().setLayout(600, 400);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
 
         movieTitleTxt = (EditText) dialog.findViewById(R.id.movieTitle);
         movieYearTxt = (EditText) dialog.findViewById(R.id.movieYear);
         movieDirectorTxt = (EditText) dialog.findViewById(R.id.movieDirector);
-        movieRatingTxt = (EditText) dialog.findViewById(R.id.movieRating);
+        final NumberPicker nrPicker = (NumberPicker) dialog.findViewById(R.id.movieRating);
+        nrPicker.setMaxValue(10);
+        nrPicker.setMinValue(0);
+        //nrPicker.setWrapSelectorWheel(false);
 
         Button saveButton = (Button) dialog.findViewById(R.id.saveButton);
 
@@ -88,11 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 String title = movieTitleTxt.getText().toString();
                 String director = movieDirectorTxt.getText().toString();
                 String year = movieYearTxt.getText().toString();
-                String rating = movieRatingTxt.getText().toString();
+                String rating =  "" + nrPicker.getValue();
 
                 Movie movie = new Movie(title, year, director, rating);
-
-                //Save DATA
                 RealmHelper helper = new RealmHelper(realm);
                 helper.save(movie);
                 movieTitleTxt.setText("");
@@ -113,3 +118,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
+
