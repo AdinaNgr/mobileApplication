@@ -55,12 +55,7 @@ public class RealmHelper {
         });
     }
 
-    public void update(String title, String year, String director,String rating){
-        Movie movie = new Movie();
-        movie.setTitle(title);
-        movie.setYear(year);
-        movie.setDirector(director);
-        movie.setRating(rating);
+    public void update(Movie movie){
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(movie);
         realm.commitTransaction();

@@ -10,13 +10,15 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
-    View
+    View,
+    AsyncStorage
 } from 'react-native';
 
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
 import GmailForm from './GmailForm.js';
-
+import AddMovieForm from './AddMovieForm';
+import EditMovieForm from './EditMovieForm';
 const routes =[
     {
         title: 'Movie List:',
@@ -29,6 +31,14 @@ const routes =[
     {
         title: 'Send Email',
         index: 2
+    },
+    {
+        title: 'Add Movie',
+        index: 3
+    },
+    {
+        title: 'Edit Movie',
+        index: 4
     }
 ];
     class App extends Component {
@@ -49,6 +59,8 @@ const routes =[
                     case 0: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                     case 2: return (<GmailForm navigator={navigator} route={routes[route.index]} {...route.passProps}></GmailForm>);
+                    case 3: return (<AddMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></AddMovieForm>);
+                     //case 4: return (<EditMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></EditMovieForm>)
                 }
             }
         }

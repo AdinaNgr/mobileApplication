@@ -113,7 +113,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
                         Realm realm = MainActivity.realm;
                         RealmHelper helper = new RealmHelper(realm);
 
-                        helper.update(title, year, director, rating);
+                        helper.update(movie);
                         movieTitleTxt.setText("");
 
                         dialog.dismiss();

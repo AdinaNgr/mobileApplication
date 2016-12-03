@@ -9,36 +9,54 @@ import {
     StyleSheet,
     Navigator,
     TouchableOpacity,
-    Text
+    Text,
+    Modal
 } from 'react-native';
 
 import * as Progress from 'react-native-progress';
 import Button from 'react-native-button'
-
+import store from 'react-native-simple-store';
 class ListScreen extends React.Component{
+    
     constructor(props){
+        
         super(props);
 
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-
+        // store.save('title1', {'title':'title1', 'year':'1999'});
+        // store.save('title2', {'title':'title1', 'year':'1999'});
+        store.save('Dark Knight', {title:'Dark Knight', year:'1999'});
         this.state = {
             dataSource: ds.cloneWithRows(['row1', 'row2']),
             myMovies: [],
-            loaded: false
+            loaded: false,
+
+            isModalOpen: true
         };
     }
+    
+    loadData(){
+        store.keys().then((result) => {
+		 this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(result),
+                    loaded: true// true
+		                });
+        })
+       }
 
     componentDidMount(){
-        this.fetchData();
+       this.loadData();
     }
+
     handlePressList(movie){
         this.props.navigator.push({index:1,
             passProps: {
                 year: movie.movieYear
             }
         })}
+
     fetchData(){
         fetch('https://facebook.github.io/react-native/movies.json')
             .then( (response) => response.json())
@@ -50,6 +68,11 @@ class ListScreen extends React.Component{
             })
             .done();
     }
+
+    async deleteMovie(title){
+        store.delete(title).then(()=>this.loadData())
+
+    }
     render(){
         if(!this.state.loaded)
         {
@@ -58,7 +81,6 @@ class ListScreen extends React.Component{
                     <Progress.Bar progress={0.3} width={200} indeterminate={true}/>
                     </View>);
         }
-
         return(
             <View style={{flex: 1}}>
             <ListView style={styles.container1}
@@ -74,7 +96,23 @@ class ListScreen extends React.Component{
                                     }})
                             }>
                                 <View>
-                                    <Text style={styles.symbol}> {movie.title}</Text>
+                                    <Text style={styles.symbol}> {movie}</Text>
+                                     <Button
+                                        style={{fontSize: 20, color: 'green',width:120,height:40, alignItems: 'flex-end'}}
+                                        styleDisabled={{color: 'red'}}
+                                        onPress={this.deleteMovie.bind(this)}>
+                                        Delete
+                                    </Button>
+                                      <Button
+                                        style={{fontSize: 20, color: 'blue',width:120,height:40, alignItems: 'flex-end'}}
+                                        styleDisabled={{color: 'red'}}
+                                        onPress={()=> this.props.navigator.push({index:4,
+                                    passProps:
+                                    {
+                                        title: movie
+                                    }})}>
+                                        Update
+                                    </Button>
                                 </View>
                         </TouchableOpacity>
                          }
@@ -89,6 +127,15 @@ class ListScreen extends React.Component{
                     onPress={()=> this.props.navigator.push({index:2})}>
                     Send email!
                 </Button>
+                <Button
+                    style={{fontSize: 20, color: 'white', backgroundColor:'red'}}
+                    styleDisabled={{color: 'red'}}
+                    onPress={()=> this.props.navigator.push({index:3, passProps:{loadData: this.loadData.bind(this)}})
+                }>
+                    Add Movie
+                </Button>
+
+                 
             </View>
     );
     }
