@@ -23,7 +23,7 @@ export default class AddMovieForm extends React.Component{
         super(props);
         this.state={
             title: '',
-            year:''
+            rating:''
         }
     }
 
@@ -33,10 +33,10 @@ export default class AddMovieForm extends React.Component{
         this.setState={title: null, year:null}
         //this.props.onAddClick();
         } catch (error) {
-        // Error saving data*/
+        Error saving data*/
         store
-            .save(this.state.title, {title: this.state.title, year: this.state.year}).then(()=>this.props.loadData()).then(()=>this.props.navigator.push({index:0}))
-
+            .save(this.state.title, this.state.rating).then(()=>this.props.loadData()).then(()=>this.props.navigator.push({index:0}))
+        //AsyncStorage.setItem(this.state.title, this.state.year).then( ()=> this.props.loadData()).then(()=>this.props.navigator.push({index:0})) ;
         
        // }
     }
@@ -53,8 +53,8 @@ export default class AddMovieForm extends React.Component{
                 <Text style={styles.description}> Release Year: </Text>
                 <TextInput
                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={(year) => this.setState({year})}
-                    value={this.state.year}
+                    onChangeText={(rating) => this.setState({rating})}
+                    value={this.state.yeratingar}
                    
                 />
                 

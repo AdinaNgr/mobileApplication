@@ -19,6 +19,8 @@ import DetailScreen from './details.js';
 import GmailForm from './GmailForm.js';
 import AddMovieForm from './AddMovieForm';
 import EditMovieForm from './EditMovieForm';
+import SimpleChart from './chart';
+
 const routes =[
     {
         title: 'Movie List:',
@@ -39,6 +41,10 @@ const routes =[
     {
         title: 'Edit Movie',
         index: 4
+    },
+    {
+        title: 'Chart',
+        index: 5
     }
 ];
     class App extends Component {
@@ -60,7 +66,8 @@ const routes =[
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                     case 2: return (<GmailForm navigator={navigator} route={routes[route.index]} {...route.passProps}></GmailForm>);
                     case 3: return (<AddMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></AddMovieForm>);
-                     //case 4: return (<EditMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></EditMovieForm>)
+                    case 4: return (<EditMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></EditMovieForm>);
+                    case 5: return (<SimpleChart navigator={navigator} route={routes[route.index]} {...route.passProps}></SimpleChart>)
                 }
             }
         }

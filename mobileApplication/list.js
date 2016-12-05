@@ -10,7 +10,8 @@ import {
     Navigator,
     TouchableOpacity,
     Text,
-    Modal
+    Modal,
+    AsyncStorage
 } from 'react-native';
 
 import * as Progress from 'react-native-progress';
@@ -25,25 +26,67 @@ class ListScreen extends React.Component{
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-        // store.save('title1', {'title':'title1', 'year':'1999'});
-        // store.save('title2', {'title':'title1', 'year':'1999'});
-        store.save('Dark Knight', {title:'Dark Knight', year:'1999'});
+     //AsyncStorage.setItem('Dark KnighTttttt', '9.0');
+     store.save('Dark Knight', 10)
         this.state = {
             dataSource: ds.cloneWithRows(['row1', 'row2']),
             myMovies: [],
             loaded: false,
-
             isModalOpen: true
         };
-    }
     
-    loadData(){
-        store.keys().then((result) => {
+    
+    
+  };
+_appendMessage(message) {
+    this.setState({messages: this.state.messages.concat(message)});
+  };
+
+  loadData(){
+       store.keys().then((result) => {
 		 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(result),
                     loaded: true// true
 		                });
         })
+       // var items = [];
+       /* store.keys().then( (result) => { return items = result.map( (title, index) => {return (store.get(title))}) }).then((items)=> this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(items),
+            loaded: true
+        }));*/
+        /*AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                    stores.map((result, i, store) => {
+                        // get at each store's key/value so you can work with it
+                        let key = store[i][0];
+                        let value = store[i][1];
+                        this.setState({
+                            myMovies: this.state.myMovies.concat(value)
+                            })
+                        });
+            });*/
+            //  AsyncStorage.getAllKeys((err, keys) => {  this.setState({
+            //         dataSource: this.state.dataSource.cloneWithRows(keys),
+            //         loaded: true// true
+		    //             })  });
+
+        //   var movies = [];
+            // AsyncStorage.getAllKeys((err, keys) => {
+            //     AsyncStorage.multiGet(keys, (err, stores) => {
+            //             stores.map((result, i, store) => {
+            //                 // get at each store's key/value so you can work with it
+            //                 let key = store[i][0];
+            //                 let value = store[i][1];
+            //                movies.push(value);
+            //             })
+            //     });
+            // })
+            // this.setState({
+            //         dataSource: this.state.dataSource.cloneWithRows(movies),
+            //         loaded: true// true
+		    //             })
+            //             this._appendMessage("load data");
+
        }
 
     componentDidMount(){
@@ -70,7 +113,11 @@ class ListScreen extends React.Component{
     }
 
     async deleteMovie(title){
-        store.delete(title).then(()=>this.loadData())
+        AsyncStorage.removeItem(title);
+        this.loadData();
+        this.forceUpdate();
+        
+        //store.delete(title).then(()=>this.loadData())
 
     }
     render(){
@@ -81,19 +128,17 @@ class ListScreen extends React.Component{
                     <Progress.Bar progress={0.3} width={200} indeterminate={true}/>
                     </View>);
         }
+        
         return(
-            <View style={{flex: 1}}>
+            <View style={{flex: 3}}>
             <ListView style={styles.container1}
                         enableEmptySections={true}
                         dataSource={this.state.dataSource}
                         renderRow=
                             {(movie)=>
-                            <TouchableOpacity onPress={()=> this.props.navigator.push({index:1,
-                                    passProps:
-                                    {
-                                        title: movie.title,
-                                        year: movie.releaseYear
-                                    }})
+                            <TouchableOpacity onPress={()=> this.props.navigator.push({index:5, passProps:{title: movie}
+                                    
+                                })
                             }>
                                 <View>
                                     <Text style={styles.symbol}> {movie}</Text>
@@ -113,6 +158,7 @@ class ListScreen extends React.Component{
                                     }})}>
                                         Update
                                     </Button>
+                                    
                                 </View>
                         </TouchableOpacity>
                          }
