@@ -11,7 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-
+import com.example.adina.firstandroidapp.activities.*;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import com.example.adina.firstandroidapp.R;
 import com.example.adina.firstandroidapp.helper.RealmHelper;
 import com.example.adina.firstandroidapp.model.Movie;
@@ -49,8 +52,26 @@ public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClic
 
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View v) {
+        Log.v("holder", "Clicked!");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Context context = itemView.getContext();
+//                Intent detailsIntent = new Intent(context, DetailsActivity.class);
+//                detailsIntent.putExtra("movieTitle", movie.getTitle());
+//                detailsIntent.putExtra("movieDirector", movie.getDirector());
+//                detailsIntent.putExtra("movieRating", movie.getRating());
+//               detailsIntent.putExtra("movieYear", movie.getYear());
+//                context.startActivity(detailsIntent);
+                Intent chartIntent = new Intent(context, ChartActivity.class);
+                chartIntent.putExtra("movieTitle", movie.getTitle());
+                chartIntent.putExtra("movieRating", movie.getRating());
+                context.startActivity(chartIntent);
 
+            }
+        }, 1000);
     }
 
 }

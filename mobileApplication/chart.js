@@ -4,7 +4,10 @@ import Chart from 'react-native-chart';
 import { Dimensions } from 'react-native';
 import store from 'react-native-simple-store';
 var {height, width} = Dimensions.get('window');
-
+ import{
+     AsyncStorage
+    
+} from 'react-native';
 const styles = StyleSheet.create({
     container: {
         height: height/8,
@@ -47,12 +50,21 @@ export default class SimpleChart extends React.Component {
     }
     componentDidMount(){
         //console.log("Rating: ", this.state.rating);
-       // console.log("Did mount chart: Title", this.state.title);
+        //   AsyncStorage.multiGet(keys, (err, stores) => {
+    //         stores.map((result, i, store) => {
+    //             // get at each store's key/value so you can work with it
+    //             let key = store[i][0];
+    //             let value = store[i][1];
+    //             movies.push(value);
+    //             });
+          //AsyncStorage.getAllKeys((err, keys) => {keys.map((key, i) => {data.push([key,AsyncStorage.getItem(key)]);console.log("Pushed in data:",key,AsyncStorage.getItem(key))})})
         if (this.state.title != null) {
+            console.log("Did mount chart: Title", this.state.title);
             AsyncStorage.getItem(this.state.title).then((rating)=> {data.push([this.state.title,rating]); console.log("Did mount chart",this.state.rating); });
         }
     }
     render() {
+        console.log("Data:", data);
         return (
              
             <View style={styles.container2}>

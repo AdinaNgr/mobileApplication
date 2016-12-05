@@ -115,10 +115,7 @@ _appendMessage(message) {
 
     async deleteMovie(title){
         AsyncStorage.removeItem(title);
-        // this.loadData();
-        // this.forceUpdate();
         
-        //store.delete(title).then(()=>this.loadData())
 
     } 
     removeKeys(){
