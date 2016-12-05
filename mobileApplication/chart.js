@@ -42,8 +42,15 @@ export default class SimpleChart extends React.Component {
     componentWillMount(){
         
         //store.get(this.state.title).then((movie)=> setState({rating: this.rating})) => THE BIND VALUE AT INDEX 1 IS NULL
-        data.push([this.state.title,this.getRandomInt(1,10)]); 
+        //data.push([this.state.title,this.getRandomInt(1,10)]); 
         
+    }
+    componentDidMount(){
+        //console.log("Rating: ", this.state.rating);
+       // console.log("Did mount chart: Title", this.state.title);
+        if (this.state.title != null) {
+            AsyncStorage.getItem(this.state.title).then((rating)=> {data.push([this.state.title,rating]); console.log("Did mount chart",this.state.rating); });
+        }
     }
     render() {
         return (

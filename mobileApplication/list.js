@@ -26,8 +26,9 @@ class ListScreen extends React.Component{
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-     //AsyncStorage.setItem('Dark KnighTttttt', '9.0');
-     store.save('Dark Knight', 10)
+     //AsyncStorage.setItem('Dark Knight', '9.0');
+     AsyncStorage.setItem('Dark Knight', '9');
+     //store.save('Dark Knight', 10)
         this.state = {
             dataSource: ds.cloneWithRows(['row1', 'row2']),
             myMovies: [],
@@ -114,11 +115,17 @@ _appendMessage(message) {
 
     async deleteMovie(title){
         AsyncStorage.removeItem(title);
-        this.loadData();
-        this.forceUpdate();
+        // this.loadData();
+        // this.forceUpdate();
         
         //store.delete(title).then(()=>this.loadData())
 
+    } 
+    removeKeys(){
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiRemove(keys, (err) => {this.loadData();});
+        })
+        
     }
     render(){
         if(!this.state.loaded)
@@ -158,6 +165,7 @@ _appendMessage(message) {
                                     }})}>
                                         Update
                                     </Button>
+                                   
                                     
                                 </View>
                         </TouchableOpacity>
@@ -166,7 +174,12 @@ _appendMessage(message) {
                      <View key={rowID} style={{height: 1, backgroundColor:'lightgray'}}/>}
 
             />
-
+                 <Button
+                            style={{fontSize: 20, color: 'green',width:120,height:40, alignItems: 'flex-end'}}
+                            styleDisabled={{color: 'green'}}
+                            onPress={this.removeKeys.bind(this)}>
+                            Delete All
+                </Button>
                 <Button
                     style={{fontSize: 20, color: 'green'}}
                     styleDisabled={{color: 'red'}}
