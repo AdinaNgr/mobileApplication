@@ -1,5 +1,6 @@
 package com.example.adina.firstandroidapp.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.exceptions.RealmMigrationNeededException;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends Activity {
 
     public static RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;

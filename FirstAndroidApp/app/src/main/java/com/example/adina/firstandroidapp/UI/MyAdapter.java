@@ -17,10 +17,12 @@ import android.widget.Toast;
 
 import com.example.adina.firstandroidapp.R;
 import com.example.adina.firstandroidapp.activities.ChartActivity;
+import com.example.adina.firstandroidapp.activities.GraphActivity;
 import com.example.adina.firstandroidapp.activities.MainActivity;
 import com.example.adina.firstandroidapp.helper.RealmHelper;
 import com.example.adina.firstandroidapp.model.Movie;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.realm.Realm;
@@ -155,6 +157,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             removeButton.setOnClickListener(this);
             editButton = (Button) view.findViewById(R.id.editMovie);
             editButton.setOnClickListener(this);
+            view.setOnClickListener(this);
         }
 
         public void bindMovie(Movie movie) {
@@ -168,6 +171,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         @Override
         public void onClick(View v) {
+            Realm realm = MainActivity.realm;
+            RealmHelper helper = new RealmHelper(realm);
+            ArrayList<Movie> movies = helper.retrieve();
+            final ArrayList<String> allTitles = new ArrayList<>();
+            final ArrayList<String> allRatings = new ArrayList<>();
+            for(int i=0;i<movies.size();i++){
+                allTitles.add(movies.get(i).getTitle());
+                allRatings.add(movies.get(i).getRating());
+            }
             Log.v("holder", "Clicked!");
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -180,10 +192,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 //                detailsIntent.putExtra("movieRating", movie.getRating());
 //               detailsIntent.putExtra("movieYear", movie.getYear());
 //                context.startActivity(detailsIntent);
-                    Intent chartIntent = new Intent(context, ChartActivity.class);
-                    chartIntent.putExtra("movieTitle", movie.getTitle());
-                    chartIntent.putExtra("movieRating", movie.getRating());
-                    context.startActivity(chartIntent);
+//                    Intent chartIntent = new Intent(context, ChartActivity.class);
+//                    chartIntent.putExtra("movieTitle", movie.getTitle());
+//                    chartIntent.putExtra("movieRating", movie.getRating());
+                    Intent graphIntent = new Intent(context, GraphActivity.class);
+                    graphIntent.putExtra("AllTitles", allTitles);
+                    graphIntent.putExtra("AllRatings", allRatings);
+                    context.startActivity(graphIntent);
 
                 }
             }, 1000);

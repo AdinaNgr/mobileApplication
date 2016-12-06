@@ -31,9 +31,18 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            </intent-filter>
+
+        </activity>
+        <activity android:name=".activities.ChartActivity"
+            android:label="ChartActivity">
+
         </activity>
         <activity android:name=".activities.DetailsActivity"></activity>
+        <activity android:name="org.achartengine.GraphicalActivity">
+
+        </activity>
+        <activity android:name=".activities.GraphActivity"> </activity>
     </application>
 
 </manifest>
