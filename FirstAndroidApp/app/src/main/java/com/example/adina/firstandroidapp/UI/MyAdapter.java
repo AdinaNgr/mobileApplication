@@ -2,6 +2,8 @@ package com.example.adina.firstandroidapp.UI;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adina.firstandroidapp.R;
+import com.example.adina.firstandroidapp.activities.ChartActivity;
 import com.example.adina.firstandroidapp.activities.MainActivity;
 import com.example.adina.firstandroidapp.helper.RealmHelper;
 import com.example.adina.firstandroidapp.model.Movie;
@@ -24,8 +28,7 @@ import io.realm.Realm;
 /**
  * Created by Adina on 12/1/2016.
  */
-
-public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<Movie> movies;
 
@@ -60,7 +63,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 helper.delete(position);
 
                 notifyItemRangeChanged(position, movies.size());
-
                 // Show the removed item label
                 Toast.makeText(context, "Removed : " + movieTitle, Toast.LENGTH_SHORT).show();
             }
@@ -83,18 +85,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
                 final Movie movie = movies.get(position);
                 Log.v("title:", movie.getTitle());
+                Log.v("rating:", movie.getRating());
                 movieTitleTxt.setText(movie.getTitle());
                 movieDirectorTxt.setText(movie.getDirector());
                 movieYearTxt.setText(movie.getYear());
                 movieRating.setMaxValue(10);
                 movieRating.setMinValue(0);
-                movieRating.setFormatter(new NumberPicker.Formatter() {
-                    @Override
-                    public String format(int i) {
-                        return movie.getRating();
-                    }
-                });
-//                movieRating.setValue(Integer.parseInt(movie.getRating()));
+//                movieRating.setFormatter(new NumberPicker.Formatter() {
+//                    @Override
+//                    public String format(int i) {
+//                        return movie.getRating();
+//                    }
+//                });
+                movieRating.setValue(Integer.parseInt(movie.getRating()));
 
                 dialog.show();
 
@@ -109,11 +112,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
                         String year = movieYearTxt.getText().toString();
                         String rating =  "" + movieRating.getValue();
 
-                        Movie movie = new Movie(title, year, director, rating);
+                        //Movie movie = new Movie(title, year, director, rating);
+
                         Realm realm = MainActivity.realm;
                         RealmHelper helper = new RealmHelper(realm);
-
-                        helper.update(movie);
+                        long id = movie.getId();
+                        helper.update(id, title, director, year, rating);
                         movieTitleTxt.setText("");
 
                         dialog.dismiss();
@@ -131,5 +135,59 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        private TextView title, year, director, rating;
+        private Movie movie;
+        public Button removeButton, editButton;
+
+        public MyViewHolder(View view){
+            super(view);
+            Log.v("ViewHolder", "MyViewHolder");
+            title = (TextView) view.findViewById(R.id.item_title);
+            year = (TextView) view.findViewById(R.id.item_year);
+            director = (TextView) view.findViewById(R.id.item_director);
+            rating = (TextView) view.findViewById(R.id.item_rating);
+            removeButton = (Button) view.findViewById(R.id.removeMovie);
+            removeButton.setOnClickListener(this);
+            editButton = (Button) view.findViewById(R.id.editMovie);
+            editButton.setOnClickListener(this);
+        }
+
+        public void bindMovie(Movie movie) {
+            this.movie = movie;
+            title.setText(movie.getTitle());
+            year.setText(movie.getYear());
+            director.setText(movie.getDirector());
+            rating.setText(movie.getRating());
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            Log.v("holder", "Clicked!");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Context context = itemView.getContext();
+//                Intent detailsIntent = new Intent(context, DetailsActivity.class);
+//                detailsIntent.putExtra("movieTitle", movie.getTitle());
+//                detailsIntent.putExtra("movieDirector", movie.getDirector());
+//                detailsIntent.putExtra("movieRating", movie.getRating());
+//               detailsIntent.putExtra("movieYear", movie.getYear());
+//                context.startActivity(detailsIntent);
+                    Intent chartIntent = new Intent(context, ChartActivity.class);
+                    chartIntent.putExtra("movieTitle", movie.getTitle());
+                    chartIntent.putExtra("movieRating", movie.getRating());
+                    context.startActivity(chartIntent);
+
+                }
+            }, 1000);
+        }
+
     }
 }

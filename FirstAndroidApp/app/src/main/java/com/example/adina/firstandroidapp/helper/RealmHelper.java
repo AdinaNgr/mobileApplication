@@ -24,6 +24,8 @@ public class RealmHelper {
         realm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
+                int nextID = (int) (realm.where(Movie.class).max("id").intValue() + 1);
+                movie.setId(nextID);
                 Movie m = realm.copyToRealm(movie);
             }
         });
@@ -55,9 +57,17 @@ public class RealmHelper {
         });
     }
 
-    public void update(Movie movie){
+    public void update(long id, String title, String director, String year, String rating){
+        Log.v("Helper", "update:" + title);
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setYear(year);
+        movie.setRating(rating);
+        movie.setId(id);
+        movie.setDirector(director);
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(movie);
+        Movie movieResult = realm.copyToRealmOrUpdate(movie);
+        Log.v("Helper", "updated at index:" + id);
         realm.commitTransaction();
     }
 }
