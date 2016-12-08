@@ -91,8 +91,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 movieTitleTxt.setText(movie.getTitle());
                 movieDirectorTxt.setText(movie.getDirector());
                 movieYearTxt.setText(movie.getYear());
+                movieRating.setMinValue(Integer.parseInt(movie.getRating()));
                 movieRating.setMaxValue(10);
-                movieRating.setMinValue(0);
 //                movieRating.setFormatter(new NumberPicker.Formatter() {
 //                    @Override
 //                    public String format(int i) {

@@ -26,9 +26,7 @@ class ListScreen extends React.Component{
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-     //AsyncStorage.setItem('Dark Knight', '9.0');
      AsyncStorage.setItem('Dark Knight', '9');
-     //store.save('Dark Knight', 10)
         this.state = {
             dataSource: ds.cloneWithRows(['row1', 'row2']),
             myMovies: [],
@@ -44,49 +42,12 @@ _appendMessage(message) {
   };
 
   loadData(){
-       store.keys().then((result) => {
+       store.keys().then((result) => { console.log('Initial :', result),
 		 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(result),
                     loaded: true// true
 		                });
         })
-       // var items = [];
-       /* store.keys().then( (result) => { return items = result.map( (title, index) => {return (store.get(title))}) }).then((items)=> this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(items),
-            loaded: true
-        }));*/
-        /*AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                    stores.map((result, i, store) => {
-                        // get at each store's key/value so you can work with it
-                        let key = store[i][0];
-                        let value = store[i][1];
-                        this.setState({
-                            myMovies: this.state.myMovies.concat(value)
-                            })
-                        });
-            });*/
-            //  AsyncStorage.getAllKeys((err, keys) => {  this.setState({
-            //         dataSource: this.state.dataSource.cloneWithRows(keys),
-            //         loaded: true// true
-		    //             })  });
-
-        //   var movies = [];
-            // AsyncStorage.getAllKeys((err, keys) => {
-            //     AsyncStorage.multiGet(keys, (err, stores) => {
-            //             stores.map((result, i, store) => {
-            //                 // get at each store's key/value so you can work with it
-            //                 let key = store[i][0];
-            //                 let value = store[i][1];
-            //                movies.push(value);
-            //             })
-            //     });
-            // })
-            // this.setState({
-            //         dataSource: this.state.dataSource.cloneWithRows(movies),
-            //         loaded: true// true
-		    //             })
-            //             this._appendMessage("load data");
 
        }
 
@@ -113,8 +74,35 @@ _appendMessage(message) {
             .done();
     }
 
-    async deleteMovie(title){
-        AsyncStorage.removeItem(title);
+ deleteMovie(title){
+     AsyncStorage.removeItem(title);
+     this.loadData();
+        /*console.log('current title:', title);
+        var items =[];
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                return items = 
+            stores.map((result, i, store) => {
+                // get at each store's key/value so you can work with it
+                let key = store[i][0];
+                let value = store[i][1];
+                //console.log('Title:', key);
+                console.log('Value :', value);
+                if(key!==title){
+                    console.log('pushed', key, i);
+                    return key;
+                    //items.push(key);
+                    
+                }
+                })
+            }).then((items) => console.log('Length after1: ', items.length, items),
+            AsyncStorage.removeItem(title),
+            this.loadData(),
+             );
+        });
+        console.log('Length after2: ', items.length);*/
+        
+       
         
 
     } 
@@ -149,7 +137,7 @@ _appendMessage(message) {
                                      <Button
                                         style={{fontSize: 20, color: 'green',width:120,height:40, alignItems: 'flex-end'}}
                                         styleDisabled={{color: 'red'}}
-                                        onPress={this.deleteMovie.bind(this)}>
+                                        onPress={() =>this.deleteMovie(movie)}>
                                         Delete
                                     </Button>
                                       <Button
