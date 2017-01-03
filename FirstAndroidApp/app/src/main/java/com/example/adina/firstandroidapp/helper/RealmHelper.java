@@ -24,7 +24,14 @@ public class RealmHelper {
         realm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-                int nextID = (int) (realm.where(Movie.class).max("id").intValue() + 1);
+                int nextID;
+                if(realm.isEmpty()){
+                    Log.v("Helper", "is empty" );
+                     nextID = 1;
+                }
+                else{
+                     nextID = (int) (realm.where(Movie.class).max("id").intValue() + 1);
+                }
                 movie.setId(nextID);
                 Movie m = realm.copyToRealm(movie);
             }

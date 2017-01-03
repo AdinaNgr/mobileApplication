@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,8 @@ import com.example.adina.firstandroidapp.R;
 import com.example.adina.firstandroidapp.UI.MyAdapter;
 import com.example.adina.firstandroidapp.helper.RealmHelper;
 import com.example.adina.firstandroidapp.model.Movie;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class MainActivity extends Activity {
     private MyAdapter adapter;
     public static Realm realm;
     private EditText movieTitleTxt, movieYearTxt, movieDirectorTxt, movieRatingTxt;
+    private Button signOut;
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +80,28 @@ public class MainActivity extends Activity {
         adapter = new MyAdapter(MainActivity.this, movieList);
         recyclerView.setAdapter(adapter);
 
+        signOut = (Button) findViewById(R.id.sign_out);
+
+        //get firebase auth instance
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+    }
+
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+        startActivity(new Intent(MainActivity.this, LogInActivity.class));
     }
 
     private void displayEditDialog(){

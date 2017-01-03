@@ -62,4 +62,5 @@
         android:text="View List"
         android:layout_toRightOf="@+id/buttonSend"
         android:onClick="viewList" />
+
 </LinearLayout>
