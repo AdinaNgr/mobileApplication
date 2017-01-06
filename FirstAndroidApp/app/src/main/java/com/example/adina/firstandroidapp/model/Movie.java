@@ -34,7 +34,7 @@ public class Movie extends RealmObject implements Serializable{
 
 
     public Movie(){
-
+        //Default constructor required for calls to DataSnapshot.getValue(Movie.class)
     }
 
     public String getTitle() {

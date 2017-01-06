@@ -21,6 +21,13 @@ import com.example.adina.firstandroidapp.activities.GraphActivity;
 import com.example.adina.firstandroidapp.activities.MainActivity;
 import com.example.adina.firstandroidapp.helper.RealmHelper;
 import com.example.adina.firstandroidapp.model.Movie;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -33,6 +40,8 @@ import io.realm.Realm;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<Movie> movies;
+    private DatabaseReference mDatabase;
+    private String mUserId;
 
     public MyAdapter(Context context, ArrayList<Movie> movies){
         this.context = context;
@@ -42,6 +51,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.v("adapter", "onCreateViewHolder");
         View v = LayoutInflater.from(context).inflate(R.layout.recyclerview_item_row, parent, false);
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //reference to the root node of the database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUserId = user.getUid();
+
         return new MyViewHolder(v);
     }
 
@@ -57,6 +72,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 // Get the clicked item label
                 Movie movie = movies.get(position);
                 String movieTitle = movie.getTitle();
+
+                mDatabase.child("movies").child(mUserId).child("items")
+                        .orderByChild("title")
+                        .equalTo(movie.getTitle())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.hasChildren()){
+                                    DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                                    firstChild.getRef().removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
                 // Remove the item on remove/button click
                 movies.remove(position);
                 notifyItemRemoved(position);
@@ -67,6 +101,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 notifyItemRangeChanged(position, movies.size());
                 // Show the removed item label
                 Toast.makeText(context, "Removed : " + movieTitle, Toast.LENGTH_SHORT).show();
+
+
             }
         });
 
@@ -93,12 +129,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 movieYearTxt.setText(movie.getYear());
                 movieRating.setMinValue(Integer.parseInt(movie.getRating()));
                 movieRating.setMaxValue(10);
-//                movieRating.setFormatter(new NumberPicker.Formatter() {
-//                    @Override
-//                    public String format(int i) {
-//                        return movie.getRating();
-//                    }
-//                });
+
                 movieRating.setValue(Integer.parseInt(movie.getRating()));
 
                 dialog.show();
@@ -113,8 +144,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         String director = movieDirectorTxt.getText().toString();
                         String year = movieYearTxt.getText().toString();
                         String rating =  "" + movieRating.getValue();
-
-                        //Movie movie = new Movie(title, year, director, rating);
 
                         Realm realm = MainActivity.realm;
                         RealmHelper helper = new RealmHelper(realm);
@@ -186,15 +215,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 @Override
                 public void run() {
                     Context context = itemView.getContext();
-//                Intent detailsIntent = new Intent(context, DetailsActivity.class);
-//                detailsIntent.putExtra("movieTitle", movie.getTitle());
-//                detailsIntent.putExtra("movieDirector", movie.getDirector());
-//                detailsIntent.putExtra("movieRating", movie.getRating());
-//               detailsIntent.putExtra("movieYear", movie.getYear());
-//                context.startActivity(detailsIntent);
-//                    Intent chartIntent = new Intent(context, ChartActivity.class);
-//                    chartIntent.putExtra("movieTitle", movie.getTitle());
-//                    chartIntent.putExtra("movieRating", movie.getRating());
                     Intent graphIntent = new Intent(context, GraphActivity.class);
                     graphIntent.putExtra("AllTitles", allTitles);
                     graphIntent.putExtra("AllRatings", allRatings);

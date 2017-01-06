@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "801705690014",
-    "project_id": "myfirstandroidapp-4fa41"
+    "firebase_url": "https://myfirstandroidapp-4fa41.firebaseio.com",
+    "project_id": "myfirstandroidapp-4fa41",
+    "storage_bucket": "myfirstandroidapp-4fa41.appspot.com"
   },
   "client": [
     {
@@ -11,7 +13,16 @@
           "package_name": "com.example.adina.firstandroidapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "801705690014-rs2gkhbuo68rt0ue3m724sqq0f9kajc2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "801705690014-ef2ovt6cqqh1oekjcikad5a2323b5o4u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyABNv1-CbxzsV9xlZ2Ee0ul7WAKu2OIz50"
@@ -26,7 +37,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

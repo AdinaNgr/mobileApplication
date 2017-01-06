@@ -1,4 +1,4 @@
-package com.example.adina.firstandroidapp.activities;
+package com.example.adina.firstandroidapp.activities.authentication;
 
 
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.adina.firstandroidapp.R;
+import com.example.adina.firstandroidapp.activities.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
