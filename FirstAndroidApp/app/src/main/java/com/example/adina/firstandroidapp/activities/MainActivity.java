@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
     private Button signOut;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseRef;
     private String mUserId;
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -78,27 +78,27 @@ public class MainActivity extends Activity {
         recyclerView.setAdapter(adapter);
 
         //REALM SETUP
-        realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        //RealmConfiguration config = new RealmConfiguration.Builder().build();
-        realm = Realm.getInstance(config);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, EmailActivity.class));
-            }
-        });
-        //RETRIEVE
-
-        //Refresh
-        RealmHelper helper = new RealmHelper(realm);
-        movieList = helper.retrieve();
-        adapter = new MyAdapter(MainActivity.this, movieList);
-        recyclerView.setAdapter(adapter);
+//        realm.init(this);
+//        RealmConfiguration config = new RealmConfiguration.Builder()
+//                .deleteRealmIfMigrationNeeded()
+//                .build();
+//        //RealmConfiguration config = new RealmConfiguration.Builder().build();
+//        realm = Realm.getInstance(config);
+//
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, EmailActivity.class));
+//            }
+//        });
+//        //RETRIEVE
+//
+//        //Refresh
+//        RealmHelper helper = new RealmHelper(realm);
+//        movieList = helper.rfetrieve();
+//        adapter = new MyAdapter(MainActivity.this, movieList);
+//        recyclerView.setAdapter(adapter);
 
         signOut = (Button) findViewById(R.id.sign_out);
 
@@ -107,8 +107,9 @@ public class MainActivity extends Activity {
 
         //get current user
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         //reference to the root node of the database
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("movies");
         mUserId = user.getUid();
 
         signOut.setOnClickListener(new View.OnClickListener() {
@@ -166,9 +167,6 @@ public class MainActivity extends Activity {
         dialog.setContentView(R.layout.input_dialog);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
 
-
-
-
         movieTitleTxt = (EditText) dialog.findViewById(R.id.movieTitle);
         movieYearTxt = (EditText) dialog.findViewById(R.id.movieYear);
         movieDirectorTxt = (EditText) dialog.findViewById(R.id.movieDirector);
@@ -190,15 +188,18 @@ public class MainActivity extends Activity {
 
                 Movie movie = new Movie(title, year, director, rating);
 
-                mDatabase.child("movies").child(mUserId).child("items").push().setValue(movie);
-                RealmHelper helper = new RealmHelper(realm);
-                helper.save(movie);
-                movieTitleTxt.setText("");
+                //Save data to firebase
+                mDatabaseRef.push().setValue(movie);
 
-                //Refresh
-                movieList = helper.retrieve();
-                adapter = new MyAdapter(MainActivity.this, movieList);
-                recyclerView.setAdapter(adapter);
+                //---------------Save data to realm-----------
+//                RealmHelper helper = new RealmHelper(realm);
+//                helper.save(movie);
+//                movieTitleTxt.setText("");
+//
+//                //Refresh
+//                movieList = helper.retrieve();
+//                adapter = new MyAdapter(MainActivity.this, movieList);
+//                recyclerView.setAdapter(adapter);
 
                 dialog.dismiss();
             }

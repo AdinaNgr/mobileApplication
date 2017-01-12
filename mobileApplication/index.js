@@ -20,6 +20,9 @@ import GmailForm from './GmailForm.js';
 import AddMovieForm from './AddMovieForm';
 import EditMovieForm from './EditMovieForm';
 import SimpleChart from './chart';
+import SignUp from './signup';
+import Login from './login';
+
 
 const routes =[
     {
@@ -45,6 +48,14 @@ const routes =[
     {
         title: 'Chart',
         index: 5
+    },
+    {
+        title: 'SignUp',
+        index:6
+    },
+    {
+        title: 'Login',
+        index: 7
     }
 ];
     class App extends Component {
@@ -56,7 +67,7 @@ const routes =[
             barStyle="light-content"
                 />
                 <Navigator
-            initialRoute={routes[0]}
+            initialRoute={routes[6]}
             initialRouteStack={routes}
             renderScene={
             (route, navigator) => {
@@ -65,9 +76,11 @@ const routes =[
                     case 0: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                     case 2: return (<GmailForm navigator={navigator} route={routes[route.index]} {...route.passProps}></GmailForm>);
-                    case 3: return (<AddMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></AddMovieForm>);
+                    case 3: return (<AddMovieForm  navigator={navigator} route={routes[route.index]} {...route.passProps}></AddMovieForm>);
                     case 4: return (<EditMovieForm navigator={navigator} route={routes[route.index]} {...route.passProps}></EditMovieForm>);
                     case 5: return (<SimpleChart navigator={navigator} route={routes[route.index]} {...route.passProps}></SimpleChart>)
+                    case 6: return (<SignUp navigator={navigator} route={routes[route.index]} {...route.passProps}></SignUp>);
+                    case 7: return (<Login  navigator={navigator} route={routes[route.ndex]} {...route.passProps}></Login>);
                 }
             }
         }
@@ -99,7 +112,6 @@ const routes =[
         </View>
         );
         }
-
     }
 
     const styles = StyleSheet.create({

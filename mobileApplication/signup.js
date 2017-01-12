@@ -19,7 +19,7 @@ import {
 import * as firebase from "firebase";
 import Button from 'react-native-button'
 
-export default class Login extends React.Component{
+export default class SignUp extends React.Component{
 
     constructor(props){
         super(props);
@@ -28,33 +28,19 @@ export default class Login extends React.Component{
         }
     }
     async onLoginPressed(){
-        console.log("Loggin In");
+        console.log("Account creation");
         this.setState({showProgress: true});
-         try 
-         {
-            await firebase.auth()
-                .signInWithEmailAndPassword(this.props.username, this.props.password).then(this.props.navigator.push({index:0}));
-                console.log("Logged In!");
-         } 
-        catch (error) {
-            switch(error.code){
+         try {
+        await firebase.auth()
+            .createUserWithEmailAndPassword(this.state.username, this.state.password).then(this.props.navigator.push({index:0}));
 
-                case "EMAIL_TAKEN":
-                    alert("The new user account cannot be created because the email is already in use.");
-                break;
+        console.log("Account created");
 
-                case "INVALID_EMAIL":
-                    alert("The specified email is not a valid email.");
-                break;
-
-                default:
-                    alert("Error creating user:");
-                }
-            console.log(error.toString())
-        }
         // Navigate to the Home page, the user is auto logged in
 
-   
+    } catch (error) {
+        console.log(error.toString())
+    }
     }
     render(){
         return(
@@ -62,7 +48,7 @@ export default class Login extends React.Component{
                     <Image style={styles.logo}
                          source={{uri: 'http://www.pomepos.com/wp-content/uploads/2015/01/LoginRed.jpg'}}/>
                     <Text style={styles.header}>
-                        Login
+                        Sign Up
                      </Text>
                       <TextInput
                         onChangeText={(text)=>this.setState({username: text})}
@@ -77,10 +63,14 @@ export default class Login extends React.Component{
                         onPress={() => this.onLoginPressed()}
                         style={styles.button}>
                         <Text style={styles.buttonText}>
-                            Log in
+                            Sign Up
                         </Text>
                     </TouchableHighlight>
-                 
+                    <Button
+                        style={{fontSize: 20, color: 'blue', paddingTop: 30}}
+                        onPress={()=> this.props.navigator.push({index:7})}>
+                        Already have an account? Sign In
+                    </Button>
                      <ActivityIndicator
                          animating={this.state.showProgress}
                          size="large"

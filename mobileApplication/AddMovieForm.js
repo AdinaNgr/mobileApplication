@@ -2,7 +2,7 @@
  * Created by Adina on 12/2/2016.
  */
 import ModalTemplate from './ModalTemplate'
-
+import { moviesRef } from './ref';
 import React, {Component} from 'react';
 import {
     TouchableHighlight,
@@ -19,6 +19,7 @@ import Button from 'react-native-button'
 import store from 'react-native-simple-store';
 
 export default class AddMovieForm extends React.Component{
+
     constructor(props){
         super(props);
         this.state={
@@ -27,20 +28,24 @@ export default class AddMovieForm extends React.Component{
         }
     }
 
+    componentDidMount() {
+       
+    }
+
     onAddClick(){
-       /* try {
-        await AsyncStorage.setItem(this.state.title, this.state.year);
-        this.setState={title: null, year:null}
-        //this.props.onAddClick();
-        } catch (error) {
-        Error saving data*/
-        var ratingInt = parseInt(this.state.rating)
-        store
-            .save(this.state.title, ratingInt).then(()=>this.props.loadData()).then(()=>this.props.navigator.push({index:0}))
-        
-        //AsyncStorage.setItem(this.state.title, this.state.year).then( ()=> this.props.loadData()).then(()=>this.props.navigator.push({index:0})) ;
-        
-       // }
+        /*Offline persistence */
+         var ratingInt = parseInt(this.state.rating)
+        // store
+        //     .save(this.state.title, ratingInt).then(()=>this.props.loadData()).then(()=>this.props.navigator.push({index:0}));
+        const newMovie = {
+                        title: this.state.title,
+                        rating: ratingInt };
+          
+      /*Add to Firebase*/
+       console.log('New movie is adding to firebase:', newMovie.title, newMovie.rating);
+       moviesRef.push(newMovie).then(() => this.props.loadData()).then(()=>this.props.navigator.push({index:0}));
+
+
     }
     
     render(){

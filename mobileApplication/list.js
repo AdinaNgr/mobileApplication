@@ -17,6 +17,8 @@ import {
 import * as Progress from 'react-native-progress';
 import Button from 'react-native-button'
 import store from 'react-native-simple-store';
+import {moviesRef} from './ref';
+
 class ListScreen extends React.Component{
     
     constructor(props){
@@ -26,7 +28,7 @@ class ListScreen extends React.Component{
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2
         });
-     AsyncStorage.setItem('Dark Knight', '9');
+    //  AsyncStorage.setItem('Dark Knight', '9');
         this.state = {
             dataSource: ds.cloneWithRows(['row1', 'row2']),
             myMovies: [],
@@ -41,18 +43,43 @@ _appendMessage(message) {
     this.setState({messages: this.state.messages.concat(message)});
   };
 
-  loadData(){
-       store.keys().then((result) => { console.log('Initial :', result),
-		 this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(result),
-                    loaded: true// true
-		                });
-        })
+//   loadData(){
+//        store.keys().then((result) => { console.log('Initial :', result),
+// 		 this.setState({
+//                     dataSource: this.state.dataSource.cloneWithRows(result),
+//                     loaded: true
+// 		                });
+//         })
 
-       }
+//        }
 
     componentDidMount(){
-       this.loadData();
+        /*Offline */
+        //this.loadData();
+        /*Online*/
+         moviesRef.on('value', snap => {
+            const movies = [];
+            snap.forEach(shot => {
+                console.log('value:', shot.val());
+                movies.push({movie: shot.val(), movieKey: shot.key }); });
+            this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(movies),
+                    loaded: true// true
+		                });
+            });
+
+    }
+    loadDataFromFirebase(){
+         moviesRef.on('value', snap => {
+            const movies = [];
+            snap.forEach(shot => {
+                console.log('value:', shot.val());
+                movies.push({movie: shot.val(), movieKey: shot.key }); });
+            this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(movies),
+                    loaded: true// true
+		                });
+            });
     }
 
     handlePressList(movie){
@@ -62,6 +89,7 @@ _appendMessage(message) {
             }
         })}
 
+   /*Save locally */
     fetchData(){
         fetch('https://facebook.github.io/react-native/movies.json')
             .then( (response) => response.json())
@@ -74,44 +102,34 @@ _appendMessage(message) {
             .done();
     }
 
- deleteMovie(title){
-     AsyncStorage.removeItem(title);
-     this.loadData();
-        /*console.log('current title:', title);
-        var items =[];
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                return items = 
-            stores.map((result, i, store) => {
-                // get at each store's key/value so you can work with it
-                let key = store[i][0];
-                let value = store[i][1];
-                //console.log('Title:', key);
-                console.log('Value :', value);
-                if(key!==title){
-                    console.log('pushed', key, i);
-                    return key;
-                    //items.push(key);
-                    
-                }
-                })
-            }).then((items) => console.log('Length after1: ', items.length, items),
-            AsyncStorage.removeItem(title),
-            this.loadData(),
-             );
-        });
-        console.log('Length after2: ', items.length);*/
-        
-       
-        
+    deleteMovie(title){
+        /*Offline */
+        // AsyncStorage.removeItem(title);
+        // this.loadData();
 
-    } 
+        /*Online*/
+        moviesRef.child(title).remove();
+        this.loadDataFromFirebase();
+        } 
+
     removeKeys(){
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiRemove(keys, (err) => {this.loadData();});
         })
-        
     }
+
+    async logout() {
+        try {
+            await firebase.auth().signOut();
+            this.props.navigator.push({index:0});
+
+            // Navigate to login view
+        } 
+        catch (error) {
+            console.log(error);
+    }
+
+}
     render(){
         if(!this.state.loaded)
         {
@@ -133,30 +151,32 @@ _appendMessage(message) {
                                 })
                             }>
                                 <View>
-                                    <Text style={styles.symbol}> {movie}</Text>
+                                    <Text style={styles.symbol}> {movie.movie.title}</Text>
                                      <Button
                                         style={{fontSize: 20, color: 'green',width:120,height:40, alignItems: 'flex-end'}}
                                         styleDisabled={{color: 'red'}}
-                                        onPress={() =>this.deleteMovie(movie)}>
+                                        // onPress={() =>this.deleteMovie(movie)}>
+                                        onPress={() => this.deleteMovie(movie.movieKey)}>
                                         Delete
                                     </Button>
                                       <Button
                                         style={{fontSize: 20, color: 'blue',width:120,height:40, alignItems: 'flex-end'}}
                                         styleDisabled={{color: 'red'}}
                                         onPress={()=> this.props.navigator.push({index:4,
-                                    passProps:
-                                    {
-                                        title: movie
-                                    }})}>
-                                        Update
+                                            passProps:
+                                            {
+                                                title: movie.movie.title,
+                                                movieKey: movie.movieKey,
+                                                rating: movie.movie.rating
+                                            }})}>
+                                                Update
                                     </Button>
                                    
                                     
                                 </View>
                         </TouchableOpacity>
                          }
-                renderSeparator={(sectionID, rowID, adjacentRowHighlighted)=>
-                     <View key={rowID} style={{height: 1, backgroundColor:'lightgray'}}/>}
+              
 
             />
                  <Button
@@ -174,10 +194,19 @@ _appendMessage(message) {
                 <Button
                     style={{fontSize: 20, color: 'white', backgroundColor:'red'}}
                     styleDisabled={{color: 'red'}}
-                    onPress={()=> this.props.navigator.push({index:3, passProps:{loadData: this.loadData.bind(this)}})
+                    /*Offline */
+                    // onPress={()=> this.props.navigator.push({index:3, passProps:{loadData: this.loadData.bind(this)}})
+                    /*Online */
+                     onPress={()=> this.props.navigator.push({index:3, passProps:{loadData: this.loadDataFromFirebase.bind(this)}})
                 }>
                     Add Movie
                 </Button>
+
+                  <Button
+                        style={{fontSize: 20, color: 'blue', paddingTop: 30}}
+                        onPress={()=> this.signOut}>
+                        Sign Out
+                    </Button>
 
                  
             </View>

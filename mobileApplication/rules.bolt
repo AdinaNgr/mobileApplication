@@ -1,0 +1,16 @@
+path / {
+  read() { false }
+  write() { false }
+}
+
+path /movies{
+  read() { true }
+  write() { true }
+}
+
+path /movies/{movie} is Movie;
+
+type Movie{
+  title: String,
+  rating: Number
+}
